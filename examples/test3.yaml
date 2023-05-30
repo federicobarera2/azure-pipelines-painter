@@ -1,0 +1,16 @@
+parameters:
+  - name: "complex"
+
+#this is not compliant with DevOps, but should still resolve as expected
+steps:
+  - ${{ insert }}: ${{ parameters.complex }}
+  - ${{ if eq(1,1) }}:
+      - script: echo 1
+        ${{ insert }}: ${{ parameters.complex }}
+  - script: echo 2
+    ${{ if eq(1,1) }}:
+      ${{ insert }}: ${{ parameters.complex }}
+      extra: 1
+  - 1
+  - ""
+  - [1, 2]

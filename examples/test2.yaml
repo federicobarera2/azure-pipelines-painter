@@ -1,0 +1,14 @@
+parameters:
+  - name: "subTemplate"
+    type: "string"
+  - name: "complex"
+    type: "object"
+
+stages:
+  - stage: "nested template with func exec ${{ add(1,1) }}"
+    jobs:
+      - job: Sub Template Job
+        steps:
+          - template: "../examples/${{ parameters.subTemplate }}.yaml"
+            parameters:
+              complex: ${{ parameters.complex }}

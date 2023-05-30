@@ -1,0 +1,20 @@
+parameters:
+  - name: "subTemplate"
+  - name: "subTemplate2"
+  - name: "environment"
+  - name: "complex"
+
+stages:
+  - ${{ if eq(variables['Build.Reason'], 'Manual') }}:
+      # comment
+      - ? >-
+          ${{ if or(
+            in (parameters.environment, 'staging', 'production')
+          )}}
+        : - stage: NestedStage
+            some_prop: 1
+  - ${{ if eq(1,1) }}:
+      - template: ${{ parameters.subTemplate }}.yaml
+        parameters:
+          subTemplate: ${{ parameters.subTemplate2 }}
+          complex: ${{ parameters.complex }}
