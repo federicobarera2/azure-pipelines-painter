@@ -1,10 +1,10 @@
+import { IVisitable } from "../common/visitor";
 import { ExpressionLexer } from "./lexer";
 import {
   AndNode,
   ComparisonNode,
   FlowNode,
   FunctionNode,
-  IVisitable,
   ValueNode,
   OrNode,
   PropertyNode,
@@ -74,7 +74,7 @@ export class ExpressionParser {
   private parse_flow() {
     const token = this.pop_flow();
 
-    if (token.value === "if" || token.value === "elseif") {
+    if (token.value === "if" || token.value === "elseif" || token.value === "else") {
       return new FlowTokenNode(token.value, this.expression());
     } else if (token.value === "insert") {
       return new FlowTokenNode(token.value);

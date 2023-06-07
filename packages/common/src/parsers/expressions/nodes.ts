@@ -1,7 +1,6 @@
 import { IVisitable, IVisitor } from "../common/visitor";
 import { FlowType } from "./types";
 
-export * from "../common/visitor";
 
 export interface IOperatorNode extends IVisitable {
   operator: string;

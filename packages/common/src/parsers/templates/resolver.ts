@@ -19,6 +19,8 @@ export class LocalFileTemplateResolver implements ITemplateResolver {
     }
   }
 
+  
+
   canResolve(template_path: string): boolean {
     const end_path = path.join(this.basePath, template_path);
     return fs.existsSync(end_path);

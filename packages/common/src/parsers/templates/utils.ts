@@ -1,5 +1,5 @@
 import { isObject, isString } from "lodash";
-import { TemplateNode, TemplateParameter, templateKeywords } from "./types";
+import { TemplateNode, TemplateParameter } from "./types";
 import { ExpressionParser } from "../expressions/parser";
 import { ExpressionEvaluator } from "../expressions/evaluators";
 

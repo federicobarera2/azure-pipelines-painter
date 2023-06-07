@@ -2,13 +2,13 @@ import { get } from "lodash";
 
 import {
   IFlowTokenNode,
-  IVisitable,
-  IVisitor,
   isFlowNode,
   isFunctionNode,
   isPropertyNode,
   isValueNode,
 } from "./nodes";
+
+import { IVisitable, IVisitor } from "../common/visitor";
 
 export class ExpressionEvaluator implements IVisitor {
   private stack: any[];
