@@ -4,10 +4,18 @@ Work in progress for an extension to draw azure devops pipelines in vscode while
 
 WIP: Code re-org in yarn namespaces
 
+# Dependencies
+
+```
+npm i -g yarn
+yarn plugin import workspace-tools
+```
+
 # Install
 
 ```
 yarn
+yarn workspaces foreach -pi run dev
 ```
 
 # Run example

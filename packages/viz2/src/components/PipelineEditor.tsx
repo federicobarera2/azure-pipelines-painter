@@ -61,6 +61,7 @@ export default function PipelineEditor({
   }, []);
 
   const handleMount = useCallback<OnMount>(() => {
+    console.log("pino");
     onChange(pipeline);
   }, []);
 

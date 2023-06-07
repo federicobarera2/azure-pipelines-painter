@@ -15,7 +15,7 @@ export default function TemplateOpen() {
   return (
     <div className="flex gap-2 cursor-pointer">
       <div>Open</div>
-      <div>{res}</div>
+      <div>Eval test: {res}</div>
     </div>
   );
 }

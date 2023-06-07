@@ -47,7 +47,7 @@ export class PipelineToNodes {
           data: {
             label: jobName,
           },
-          type: "job",
+          // type: "job",
           position: {
             x: (this.baseX * 2),
             y: (this.currentY += 100),
@@ -75,7 +75,7 @@ export class PipelineToNodes {
             data: {
               label: stepName,
             },
-            type: "step",
+            // type: "step",
             position: {
               x: (this.baseX * 3),
               y: (this.currentY += 100),
