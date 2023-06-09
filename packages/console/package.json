@@ -1,0 +1,17 @@
+{
+  "name": "azpp-console",
+  "private": true,
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "azpp-common": "workspace:*",
+    "typescript": "^5.1.3"
+  }
+}

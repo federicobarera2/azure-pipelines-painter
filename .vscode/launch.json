@@ -8,7 +8,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/src/index.ts",
+      "program": "${workspaceFolder}/packages/console/src/index.ts",
       "args": ["./examples/test.yaml"],
     }
   ]

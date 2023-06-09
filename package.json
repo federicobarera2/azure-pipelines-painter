@@ -1,8 +1,16 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "start:common": "yarn workspace azpp-common run dev",
+    "start:viz": "yarn workspace viz2 run dev",
+    "start": "concurrently \"yarn run start:common\" \"yarn run start:viz\" "
+  },
   "workspaces": [
     "packages/*"
   ],
-  "packageManager": "yarn@3.6.0"
+  "packageManager": "yarn@3.6.0",
+  "dependencies": {
+    "concurrently": "^8.1.0"
+  }
 }

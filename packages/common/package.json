@@ -2,8 +2,6 @@
   "name": "azpp-common",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "scripts": {
     "watch": "npx tsc --build --force -w",
     "build": "npx tsc --build --force",

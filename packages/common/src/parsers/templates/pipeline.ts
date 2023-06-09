@@ -13,6 +13,7 @@ import {
   resolveTemplateParameters,
 } from "./utils";
 import { isArray, isObject, cloneDeep } from "lodash";
+import YAML from "yaml";
 
 export class PipelineParser {
   private resolverFunc: TemplateResolverFunc;
@@ -34,9 +35,16 @@ export class PipelineParser {
     return parameters;
   }
 
-  public parse(context: object, path: string) {
+  public parseFile(context: object, path: string) {
     const doc = this.resolver.resolve(path);
     const doc2 = this.evaluateNodes(cloneDeep(doc), context, path);
+
+    return doc2;
+  }
+
+  public parseFileContent(context: object, content: string) {
+    const doc = YAML.parse(content.toString());
+    const doc2 = this.evaluateNodes(cloneDeep(doc), context, content);
 
     return doc2;
   }
@@ -126,7 +134,7 @@ export class PipelineParser {
           );
 
           if (paramsResolveResult.isParametersFullyResolved) {
-            value = templateResolver.parse(
+            value = templateResolver.parseFile(
               { ...subContext, parameters: paramsResolveResult.params },
               path
             );

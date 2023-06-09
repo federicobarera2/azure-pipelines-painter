@@ -19,15 +19,13 @@ export class LocalFileTemplateResolver implements ITemplateResolver {
     }
   }
 
-  
-
   canResolve(template_path: string): boolean {
-    const end_path = path.join(this.basePath, template_path);
+    const end_path = path.resolve(this.basePath, template_path);
     return fs.existsSync(end_path);
   }
 
   public resolve(template_path: string) {
-    const end_path = path.join(this.basePath, template_path);
+    const end_path = path.resolve(this.basePath, template_path);
     const file = fs.readFileSync(end_path);
     const yaml = YAML.parse(file.toString());
     return yaml;
