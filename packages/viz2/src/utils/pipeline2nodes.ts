@@ -16,12 +16,12 @@ export class PipelineToNodes {
     const edges: Edge[] = [];
     
     const stages = this.pipeline.stages || [{
-      name: "Single Computed Stage",
+      stage: "Single Computed Stage",
     }];
     
     
     stages.forEach((stage, stageIndex) => {
-      const stageName = stage.name || `Stage ${stageIndex}`;
+      const stageName = stage.displayName ?? stage.stage ?? `Stage ${stageIndex}`;
       const stageId = `${stageIndex}`;
       
       nodes.push({
@@ -39,7 +39,7 @@ export class PipelineToNodes {
       const jobs = stage.jobs || [];
       
       jobs.forEach((job, jobIndex) => {
-        const jobName = job.name || `Job ${jobIndex}`;
+        const jobName = job.displayName ?? job.job ?? `Job ${jobIndex}`;
         const jobId = `${stageId}-${jobIndex}`;
         
         nodes.push({
@@ -67,7 +67,7 @@ export class PipelineToNodes {
         let currentStepId: string | undefined = undefined;
         
         steps.forEach((step, stepIndex) => {
-          const stepName = step.name || `Step ${stepIndex}`;
+          const stepName = step.displayName ?? step.step ?? `Step ${stepIndex}`;
           const stepId = `${stageId}-${jobId}-${stepIndex}`;
 
           nodes.push({

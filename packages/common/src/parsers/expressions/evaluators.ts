@@ -51,6 +51,8 @@ export class ExpressionEvaluator implements IVisitor {
         return args.reduce((a, b) => a / b);
       case "eq":
         return args.reduce((a, b) => a === b);
+      case "ne":
+        return args.reduce((a, b) => a !== b);
       case "not":
         return !args[0];
       case "or":
@@ -60,6 +62,11 @@ export class ExpressionEvaluator implements IVisitor {
       case "in":
         const [v, ...rest] = args;
         return rest.includes(v);
+      case "notIn":
+        const [v2, ...rest2] = args;
+        return !rest2.includes(v2);
+      case "coalesce":
+        return args.find((a) => a !== undefined);
       default:
         throw new Error(`Unknown function operator: ${operator}`);
     }
@@ -103,7 +110,7 @@ export class FlowchartVisitor implements IVisitor {
     } else if (isFunctionNode(node)) {
       this.addFlowchartStep(`Function: ${node.operator}`);
     } else if (isFlowNode(node)) {
-      this.addFlowchartStep(`Flow: ${node.flow} - ${node.condition}`);
+      this.addFlowchartStep(`Flow: ${node.flow} - ${node.body}`);
     }
   }
 

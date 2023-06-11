@@ -7,9 +7,18 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Launch Console",
       "program": "${workspaceFolder}/packages/console/src/index.ts",
-      "args": ["./examples/test.yaml"],
-    }
+      "args": ["${workspaceFolder}/docs/examples/test.yaml"],
+      "outFiles": ["${workspaceFolder}/packages/**/dist/**/*.js"]
+    },
+    {
+      "name": "Next.js: debug server-side",
+      "type": "node-terminal",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/viz2",
+      "outFiles": ["${workspaceFolder}/packages/**/dist/**/*.js"],
+      "command": "yarn run dev"
+    },
   ]
 }

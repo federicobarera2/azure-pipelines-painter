@@ -6,11 +6,11 @@ import {
 } from "./types";
 
 export class ExpressionLexer {
-  _comparison_operators: string[] = ["eq", "neq", "lt", "lte", "gt", "gte"];
+  _comparison_operators: string[] = ["eq", "ne", "lt", "lte", "gt", "gte"];
   _logical_operators: string[] = ["and", "or", "not"];
   _flow_operators: string[] = ["if", "else", "elseif", "each", "insert"];
   _booleans: string[] = ["true", "false"];
-  _functions: string[] = ["add", "sub", "mul", "div", "mod", "coalesce", "in"];
+  _functions: string[] = ["add", "sub", "mul", "div", "mod", "coalesce", "in", "notIn"];
   _separator = " ";
   _singleQuote = "'";
   _current_char_index = 0;
@@ -53,15 +53,15 @@ export class ExpressionLexer {
   }
 
   private is_comparison_op(value: string) {
-    return this._comparison_operators.indexOf(value.toLowerCase()) > -1;
+    return this._comparison_operators.indexOf(value) > -1;
   }
 
   private is_logical_op(value: string) {
-    return this._logical_operators.indexOf(value.toLowerCase()) > -1;
+    return this._logical_operators.indexOf(value) > -1;
   }
 
   private is_flow_op(value: string) {
-    return this._flow_operators.indexOf(value.toLowerCase()) > -1;
+    return this._flow_operators.indexOf(value) > -1;
   }
 
   private is_boolean(value: string) {
@@ -69,7 +69,7 @@ export class ExpressionLexer {
   }
 
   private is_function(value: string) {
-    return this._functions.indexOf(value.toLowerCase()) > -1;
+    return this._functions.indexOf(value) > -1;
   }
 
   private identifier(result: string): TokenType {

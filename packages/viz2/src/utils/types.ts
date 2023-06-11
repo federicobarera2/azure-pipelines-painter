@@ -5,17 +5,27 @@ export type Pipeline = {
 }
 
 export type Stage = {
-  name?: string;
+  stage?: string;
+  displayName?: string;
   jobs?: Job[];
   dependsOn?: string[];
 }
 
 export type Job = {
-  name?: string;
+  job?: string;
+  displayName?: string;
   steps: Step[];
 }
 
 export type Step = Record<string, any> & {
-  name?: string;
+  step?: string;
   displayName?: string;
 }
+
+export type TemplateParameter = {
+  name: string;
+  default?: any;
+  type?: any;
+
+  //TODO: others
+};

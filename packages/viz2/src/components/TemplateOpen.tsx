@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useRef } from "react";
-import { FileWithHandle, fileOpen } from "browser-fs-access";
+import { useCallback, useRef } from "react";
+import { FileWithHandle } from "browser-fs-access";
 import { evaluateExpression } from "azpp-common/parsers/templates/utils";
-import { openPipeline } from "@/actions/pipelines";
 
 const readPromise = (file: FileWithHandle) => {
   var reader = new FileReader();
@@ -24,9 +23,8 @@ export default function TemplateOpen() {
   const open = useCallback(async () => {
     // const file = await fileOpen();
     // console.log(await readPromise(file));
-
-    const s = await openPipeline(input.current?.value || "");
-    console.log(s);
+    //const s = await openPipeline(input.current?.value || "");
+    //console.log(s);
   }, []);
 
   return (

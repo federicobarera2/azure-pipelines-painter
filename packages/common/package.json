@@ -2,14 +2,16 @@
   "name": "azpp-common",
   "version": "0.0.0",
   "private": true,
+  "main": "dist/index.js",
   "scripts": {
-    "watch": "npx tsc --build --force -w",
-    "build": "npx tsc --build --force",
+    "watch": "tsc --build --force -w",
+    "build": "tsc --build --force",
     "test": "jest",
     "test:watch": "jest --watch",
     "dev": "yarn watch"
   },
   "devDependencies": {
+    "@preconstruct/cli": "^2.7.0",
     "@types/command-line-args": "^5.2.0",
     "@types/jest": "^29.5.1",
     "@types/lodash": "^4.14.194",
@@ -26,7 +28,10 @@
     "yaml": "^2.2.2"
   },
   "exports": {
-    "./*": "./dist/*"
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*"
+    }
   },
   "typesVersions": {
     "*": {

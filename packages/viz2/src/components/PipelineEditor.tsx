@@ -1,79 +1,28 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
-import { Pipeline } from "../utils/types";
-import Editor, { OnChange, OnMount } from "@monaco-editor/react";
+import { useCallback, useEffect, useState } from "react";
+import Editor, { OnMount } from "@monaco-editor/react";
+import YAML from "yaml";
 
-const pipeline: Pipeline = {
-  stages: [
-    {
-      name: "stage1",
-      jobs: [
-        {
-          name: "job1",
-          steps: [
-            {
-              name: "step1",
-              displayName: "Step 1",
-              type: "shell",
-            },
-            {
-              name: "step2",
-              displayName: "Step 1",
-              type: "shell",
-            },
-            {
-              name: "step3",
-              displayName: "Step 1",
-              type: "shell",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: "stage2",
-      jobs: [
-        {
-          name: "job1",
-          steps: [
-            {
-              name: "step1",
-              displayName: "Step 2",
-              type: "shell",
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
-
-export default function PipelineEditor({
-  onChange,
-}: {
-  onChange: (value: Pipeline | undefined) => void;
-}) {
-  const handleEditorChange = useCallback<OnChange>((value, event) => {
-    console.log(value, event);
-
-    value && onChange(JSON.parse(value) as Pipeline);
-  }, []);
+export default function PipelineEditor({ pipeline }: { pipeline?: any }) {
+  const [value, setState] = useState<any>();
 
   const handleMount = useCallback<OnMount>(() => {
-    console.log("pino");
-    onChange(pipeline);
+    console.log("pipeline editor mounted");
   }, []);
 
-  const initial = useMemo(() => JSON.stringify(pipeline, null, 2), []);
+  useEffect(() => {
+    if (!pipeline) return;
+    setState(YAML.stringify(pipeline));
+  }, [pipeline]);
 
   return (
     <Editor
-      defaultLanguage="json"
-      defaultValue={initial}
+      value={value}
+      defaultLanguage="yaml"
       height="100%"
       theme="vs-dark"
-      onChange={handleEditorChange}
+      options={{ readOnly: true }}
       onMount={handleMount}
     />
   );

@@ -74,10 +74,17 @@ export class ExpressionParser {
   private parse_flow() {
     const token = this.pop_flow();
 
-    if (token.value === "if" || token.value === "elseif" || token.value === "else") {
-      return new FlowTokenNode(token.value, this.expression());
-    } else if (token.value === "insert") {
-      return new FlowTokenNode(token.value);
+    if (token.value === "if" || token.value === "elseif") {
+      return new FlowTokenNode(token.value, token.value, this.expression());
+    } else if (token.value === "insert"  || token.value === "else") {
+      return new FlowTokenNode(token.value, token.value);
+    }
+    else if (token.value === "each") {
+      // [each] [property] [in] [expression]
+      const id = this.pop_expected("property");
+      this.pop_expected("function", "in");
+      
+      return new FlowTokenNode("each", id.value, this.expression());
     }
 
     throw "Unexpected flow operator";
@@ -133,8 +140,9 @@ export class ExpressionParser {
     return null;
   }
 
-  private pop_expected(tokenType: TokenType): ExpressionToken {
-    if (!this.is(tokenType)) throw `Expected ${tokenType}`;
+  private pop_expected(tokenType: TokenType, value: any = null): ExpressionToken {
+    if (!this.is(tokenType, value)) 
+      throw `Expected ${tokenType}`;
 
     const token = this.peek()!;
     ++this._currentTokenIndex;

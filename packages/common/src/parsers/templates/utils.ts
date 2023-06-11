@@ -1,7 +1,20 @@
 import { isObject, isString } from "lodash";
-import { TemplateNode, TemplateParameter } from "./types";
 import { ExpressionParser } from "../expressions/parser";
 import { ExpressionEvaluator } from "../expressions/evaluators";
+import YAML from "yaml";
+
+export type TemplateNode = {
+  template: string;
+  parameters: Record<string, any>;
+};
+
+export type TemplateParameter = {
+  name: string;
+  default?: any;
+  type?: any;
+
+  //TODO: others
+};
 
 const containsExpression = (v?: string) =>
   !!v ? /\${{((.|\n)*?)}}/gim.test(v) : false;
@@ -54,10 +67,7 @@ export const resolveTemplateParameters = (
     o[param.name] = context[param.name] ?? param.default;
   }
 
-  return {
-    isParametersFullyResolved: Object.values(o).every((v) => v !== undefined),
-    params: o,
-  };
+  return o;
 };
 
 export const evaluateExpression = (context: any, expression: string) => {
@@ -67,3 +77,10 @@ export const evaluateExpression = (context: any, expression: string) => {
 
   return evaluator.getResult();
 };
+
+export const getParamsFromYAMLContent = (content: string): TemplateParameter[] => {
+  const doc = YAML.parse(content.toString());
+  const parameters = doc?.parameters ?? [];
+
+  return parameters;
+}

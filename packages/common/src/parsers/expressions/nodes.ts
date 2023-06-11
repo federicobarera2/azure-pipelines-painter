@@ -15,11 +15,12 @@ export interface ILogicalNode extends IOperatorNode {
 
 export interface IFlowTokenNode extends IVisitable {
   flow: FlowType;
-  condition?: IVisitable;
+  body?: IVisitable;
+  identifier: string;
 }
 
 export function isFlowNode(node: IVisitable): node is IFlowTokenNode {
-  return "flow" in node && "condition" in node;
+  return "flow" in node;
 }
 
 export interface IFunctionNode extends IVisitable {
@@ -96,16 +97,18 @@ export class ValueNode implements IVisitable, IValueNode {
 
 export class FlowTokenNode implements IVisitable, IFlowTokenNode {
   flow: FlowType;
-  condition: IVisitable | undefined;
+  body: IVisitable | undefined;
+  identifier: string;
 
-  constructor(flow: FlowType, condition?: IVisitable) {
+  constructor(flow: FlowType, identifier: string, body?: IVisitable) {
     this.flow = flow;
-    this.condition = condition;
+    this.identifier = identifier;
+    this.body = body;
   }
 
   accept(visitor: IVisitor): void {
     visitor.start_visit(this);
-    this.condition?.accept(visitor);
+    this.body?.accept(visitor);
     visitor.visit(this);
     visitor.end_visit();
   }
