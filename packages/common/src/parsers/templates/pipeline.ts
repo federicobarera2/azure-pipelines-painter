@@ -178,13 +178,23 @@ export class PipelineParser {
       }
 
       if (isTemplateNode(newO)) {
-        const path = newO.template;
+        
         const parameters = newO.parameters;
         let subContext = { ...cloneDeep(context), parameters: undefined };
 
+        let path = newO.template.toString();
+        let templateBasePath = currentPath;
+
+        if (path.indexOf('@') !== -1) {
+          templateBasePath = context[`__${path.split("@")[1]}`] ?? this.resolver.basePath;
+          path = path.split("@")[0];
+        }
+
+        console.log(templateBasePath, path);
+        
         const templateResolver = new PipelineParser(this.resolverFunc, [
           this.resolver.basePath,
-          currentPath,
+          templateBasePath,
         ]);
 
         let value = null;
