@@ -4,96 +4,195 @@ import {
   Node,
 } from "reactflow";
 export class PipelineToNodes {
-  constructor(private pipeline: Pipeline) {
-
-  }
-
   private baseX = 50;
-  private currentY = 0;
+  private baseY = 50;
+  private xOffset = 200;
+  private yOffset = 80;
+  private nodeCounter = 0;
+
+  constructor(private pipeline: any) {}
+
+  // Add a helper method to calculate total height of a branch
+  private calculateBranchHeight(item: any): number {
+    let height = 1; // Count current item
+    if (item.jobs) {
+      item.jobs.forEach((job: any) => {
+        height += job.steps ? job.steps.length : 1;
+      });
+    }
+    if (item.value?.stages) {
+      height += item.value.stages.reduce((acc: number, stage: any) => 
+        acc + this.calculateBranchHeight(stage), 0);
+    }
+    return height;
+  }
 
   public getNodes(): [Node[], Edge[]] {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
-    
-    const stages = this.pipeline.stages || [{
-      stage: "Single Computed Stage",
-    }];
-    
-    
-    stages.forEach((stage, stageIndex) => {
-      const stageName = stage.displayName ?? stage.stage ?? `Stage ${stageIndex}`;
-      const stageId = `${stageIndex}`;
-      
-      nodes.push({
-        id: stageId,
-        data: {
-          label: stageName
-        },
-        type: "stage",
-        position: {
-          x: this.baseX,
-          y: (this.currentY += 100),
-        },
-      });
 
-      const jobs = stage.jobs || [];
-      
-      jobs.forEach((job, jobIndex) => {
-        const jobName = job.displayName ?? job.job ?? `Job ${jobIndex}`;
-        const jobId = `${stageId}-${jobIndex}`;
+    const processSteps = (steps: any[], parentId: string | null, parentX: number, parentY: number) => {
+      steps.forEach((step, index) => {
+        this.nodeCounter++;
+        const nodeId = `node-${this.nodeCounter}`;
+        const currentY = this.nodeCounter * this.yOffset;
         
-        nodes.push({
-          id: jobId,
-          data: {
-            label: jobName,
-          },
-          // type: "job",
-          position: {
-            x: (this.baseX * 2),
-            y: (this.currentY += 100),
-          },
-        });
-
-        edges.push({
-          id: `${stageId}-${jobId}`,
-          source: stageId,
-          target: jobId,
-          type: "smoothstep",
-          animated: true,
-        });
-        
-        const steps = job.steps || [];
-        
-        let currentStepId: string | undefined = undefined;
-        
-        steps.forEach((step, stepIndex) => {
-          const stepName = step.displayName ?? step.step ?? `Step ${stepIndex}`;
-          const stepId = `${stageId}-${jobId}-${stepIndex}`;
-
+        if (step.template) {
+          // Template node for steps
           nodes.push({
-            id: stepId,
-            data: {
-              label: stepName,
-            },
-            // type: "step",
+            id: nodeId,
             position: {
-              x: (this.baseX * 3),
-              y: (this.currentY += 100),
+              x: parentX + this.xOffset,
+              y: currentY
             },
+            data: {
+              label: 'Template',
+              ...step
+            },
+            type: 'templateNode'
           });
 
+          if (step.value?.steps) {
+            processSteps(step.value.steps, nodeId, parentX + this.xOffset, currentY);
+          }
+        } else {
+          nodes.push({
+            id: nodeId,
+            position: {
+              x: parentX + this.xOffset,
+              y: currentY
+            },
+            data: { 
+              label: step.script || 'Step',
+              ...step
+            },
+            type: 'stepNode'
+          });
+        }
+
+        if (parentId) {
           edges.push({
-            id: `${jobId}-${stepId}`,
-            source: currentStepId ?? jobId,
-            target: stepId,
-            type: "smoothstep",
-            animated: true,
+            id: `edge-${parentId}-${nodeId}`,
+            source: parentId,
+            target: nodeId,
+            type: 'smoothstep'
+          });
+        }
+      });
+    };
+
+    const processJobs = (jobs: any[], parentId: string | null, parentX: number, parentY: number) => {
+      jobs.forEach((job, index) => {
+        this.nodeCounter++;
+        const nodeId = `node-${this.nodeCounter}`;
+        const currentY = this.nodeCounter * this.yOffset;
+        
+        if (job.template) {
+          // Template node for jobs
+          nodes.push({
+            id: nodeId,
+            position: {
+              x: parentX + this.xOffset,
+              y: currentY
+            },
+            data: {
+              label: 'Template',
+              ...job
+            },
+            type: 'templateNode'
           });
 
-          currentStepId = stepId;
-        });
+          if (job.value?.jobs) {
+            processJobs(job.value.jobs, nodeId, parentX + this.xOffset, currentY);
+          }
+        } else {
+          nodes.push({
+            id: nodeId,
+            position: {
+              x: parentX + this.xOffset,
+              y: currentY
+            },
+            data: { 
+              label: job.job || 'Job',
+              ...job
+            },
+            type: 'jobNode'
+          });
+        }
+
+        if (parentId) {
+          edges.push({
+            id: `edge-${parentId}-${nodeId}`,
+            source: parentId,
+            target: nodeId,
+            type: 'smoothstep'
+          });
+        }
+
+        if (job.steps) {
+          processSteps(job.steps, nodeId, parentX + this.xOffset, currentY);
+        }
       });
-    });
+    };
+
+    const processStages = (stages: any[], parentId: string | null = null, parentX: number = this.baseX, parentY: number = this.baseY) => {
+      stages.forEach((stage, index) => {
+        this.nodeCounter++;
+        const nodeId = `node-${this.nodeCounter}`;
+        const currentY = this.nodeCounter * this.yOffset;
+        
+        if (stage.template) {
+          // Template node for stages
+          nodes.push({
+            id: nodeId,
+            position: {
+              x: parentX,
+              y: currentY
+            },
+            data: {
+              label: 'Template',
+              ...stage
+            },
+            type: 'templateNode'
+          });
+
+          if (stage.value?.stages) {
+            processStages(stage.value.stages, nodeId, parentX + this.xOffset, currentY);
+          }
+        } else {
+          nodes.push({
+            id: nodeId,
+            position: {
+              x: parentX,
+              y: currentY
+            },
+            data: { 
+              label: stage.stage || 'Stage',
+              ...stage
+            },
+            type: 'stageNode'
+          });
+        }
+
+        if (parentId) {
+          edges.push({
+            id: `edge-${parentId}-${nodeId}`,
+            source: parentId,
+            target: nodeId,
+            type: 'smoothstep'
+          });
+        }
+
+        if (stage.jobs) {
+          processJobs(stage.jobs, nodeId, parentX, currentY);
+        }
+      });
+    };
+
+    if (this.pipeline.stages) {
+      processStages(this.pipeline.stages);
+    }
+
     return [nodes, edges];
   }
 }
