@@ -40,7 +40,7 @@ export class PipelineToNodes {
             position: { x: parentX + (nodeType === 'stage' ? 0 : this.xOffset), y: currentY },
             data: {
               label: `template: ${item.template}`,
-              ...item
+              __ado: item
             },
             type: 'templateNode',
             style: item.resolvable
@@ -68,7 +68,7 @@ export class PipelineToNodes {
             position: { x: parentX + (nodeType === 'stage' ? 0 : this.xOffset), y: currentY },
             data: { 
               label: item[nodeType] ?? this.grabObjectName(item) ?? "node",
-              ...item
+              __ado: item
             },
             type: `${nodeType}Node`,
             style: nodeStyles[nodeType]
@@ -92,7 +92,7 @@ export class PipelineToNodes {
         } else if (item.steps) {
           processNodes(item.steps, 'step', nodeId, parentX + this.xOffset);
         }
-        else if (nodeType === 'job')
+        else if (nodeType === 'step')
         {
           parentId = nodeId;
         }

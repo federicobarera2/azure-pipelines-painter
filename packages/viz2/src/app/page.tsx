@@ -12,10 +12,6 @@ import { parsePipeline } from "@/actions/pipelines";
 export default function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const onYamlChange = useCallback((p: TemplateParameter[], yaml: string) => {
-      dispatch({ type: "UPDATE_YAML", payload: { p, yaml } });
-    }, []);
-
   const onContextChange = useCallback((context: any) => {
     dispatch({ type: "UPDATE_CONTEXT", payload: context });
   }, []);
@@ -44,11 +40,9 @@ export default function Home() {
         </div>
         <div className="h-screen">
           <div className="h-4/6 border-2 resize-y overflow-hidden">
-            <h2>Editor (DevOps YAML)</h2>
-            <YamlEditor onChange={onYamlChange} />
+            <YamlEditor dispatch={dispatch} />
           </div>
           <div className="h-full border-2 overflow-hidden">
-            <h2>Params</h2>
             <ParamsEditor
               p={state.context}
               yaml={state.yaml}

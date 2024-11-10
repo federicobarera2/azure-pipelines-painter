@@ -18,7 +18,7 @@ export default function ParamsEditor({
   const [params, setParams] = useState(initalState);
 
   useEffect(() => {
-    console.log("pipeline changed");
+    console.log(p);
     setParams(YAML.stringify(p));
   }, [yaml]);
 
@@ -39,13 +39,17 @@ export default function ParamsEditor({
   }, []);
 
   return (
-    <Editor
-      value={params}
-      defaultLanguage="yaml"
-      height="100%"
-      theme="vs-dark"
-      onChange={handleEditorChange}
-      onMount={handleMount}
-    />
+    <>
+      <h2>Params</h2>
+      <Editor
+        value={params}
+        defaultLanguage="yaml"
+        height="100%"
+        theme="vs-dark"
+        onChange={handleEditorChange}
+        onMount={handleMount}
+      />
+    </>
+    
   );
 }

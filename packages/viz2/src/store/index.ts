@@ -14,7 +14,7 @@ export const initialState = {
 }
 
 type State = typeof initialState;
-type Action = {
+export type Action = {
   type: string;
   payload: any;
 }
@@ -43,8 +43,8 @@ export const reducer = (state: State, action: Action) => {
               [param.name]: param.default ?? null
             }), {})
           },
-          ...state.context
-        }
+          ...state.context,
+        },
       }
     case "NODE_CLICK":
       return {

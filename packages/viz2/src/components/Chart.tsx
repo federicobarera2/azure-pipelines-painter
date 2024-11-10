@@ -21,7 +21,7 @@ export default function Chart({
 
   const onNodeClick = useCallback((e: any, nodeContext: any) => {
     debugger;
-    dispatch({ type: "NODE_CLICK", payload: nodeContext.data });
+    dispatch({ type: "NODE_CLICK", payload: nodeContext.data.__ado });
   }, [dispatch])
 
   useEffect(() => {
@@ -39,12 +39,17 @@ export default function Chart({
   }, []);
 
   useEffect(() => {
-    const [initialNodes, initialEdges] = new PipelineToNodes(
-      pipeline ?? {}
-    ).getNodes();
+    const chartBuilder = new PipelineToNodes(pipeline ?? {});
+    try {
+      const [initialNodes, initialEdges] = chartBuilder.getNodes();
 
-    setNodes(initialNodes);
-    setEdges(initialEdges);
+      setNodes(initialNodes);
+      setEdges(initialEdges);
+    }
+    catch(e) {
+      console.error(e);
+    }
+    
   }, [pipeline]);
 
   return (
