@@ -5,14 +5,16 @@ import {
 } from "reactflow";
 export class PipelineToNodes {
   private baseX = 50;
-  private baseY = 50;
   private xOffset = 200;
   private yOffset = 80;
+  private textMaxLength = 20;
   
   constructor(private pipeline: any) {}
 
   private grabObjectName(obj: any) {
-    return Object.keys(obj)[0]
+    const text = obj[Object.keys(obj)[0]]?.toString();
+    if (text) 
+      return text.length < this.textMaxLength ? text : `${text.substring(0, this.textMaxLength)}...`;
   }
 
   public getNodes(): [Node[], Edge[]] {
@@ -37,11 +39,13 @@ export class PipelineToNodes {
             id: nodeId,
             position: { x: parentX + (nodeType === 'stage' ? 0 : this.xOffset), y: currentY },
             data: {
-              label: 'Template',
+              label: `template: ${item.template}`,
               ...item
             },
             type: 'templateNode',
-            style: { border: '1px dashed grey', boxShadow: "5px 5px 5px grey" }
+            style: item.resolvable
+              ? { border: '1px dashed grey', boxShadow: "5px 5px 5px grey" }
+              : { border: '1px dashed red', boxShadow: "5px 5px 5px red" }
           });
 
           // Process nested items
@@ -54,7 +58,7 @@ export class PipelineToNodes {
           }
         } else {
           const nodeStyles: Record<string, any> = {
-            stage: { border: "1px solid grey", boxShadow: "5px 5px 5px red" },
+            stage: { border: "1px solid grey", boxShadow: "5px 5px 5px green" },
             job: { border: "1px solid grey", boxShadow: "5px 5px 5px blue" },
             step: {  border: "1px solid grey", boxShadow: "5px 5px 5px grey" }
           };
@@ -88,7 +92,7 @@ export class PipelineToNodes {
         } else if (item.steps) {
           processNodes(item.steps, 'step', nodeId, parentX + this.xOffset);
         }
-        else
+        else if (nodeType === 'job')
         {
           parentId = nodeId;
         }

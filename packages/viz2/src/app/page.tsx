@@ -12,20 +12,15 @@ import { parsePipeline } from "@/actions/pipelines";
 export default function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const onYamlChange = useCallback(
-    async (p: TemplateParameter[], yaml: string) => {
+  const onYamlChange = useCallback((p: TemplateParameter[], yaml: string) => {
       dispatch({ type: "UPDATE_YAML", payload: { p, yaml } });
-    },
-    []
-  );
+    }, []);
 
   const onContextChange = useCallback((context: any) => {
     dispatch({ type: "UPDATE_CONTEXT", payload: context });
   }, []);
 
   useEffect(() => {
-    console.log("update pipeline");
-
     const action = async () => {
       if (state.context === undefined || state.yaml === undefined) return;
       const pipeline = await parsePipeline(state.context, state.yaml);
@@ -40,11 +35,11 @@ export default function Home() {
       <div className="grid grid-cols-2">
         <div className="h-screen">
           <div className="h-4/6 border-2 resize-y overflow-hidden">
-            <Chart pipeline={state.pipeline} />
+            <Chart dispatch={dispatch} pipeline={state.pipeline} />
           </div>
           <div className="h-full border-2">
             <h2>Rendered (Pure YAML - Readonly)</h2>
-            <PipelineEditor pipeline={state.pipeline} />
+            <PipelineEditor pipeline={state.renderYaml } />
           </div>
         </div>
         <div className="h-screen">

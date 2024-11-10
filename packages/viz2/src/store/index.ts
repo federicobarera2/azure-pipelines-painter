@@ -10,6 +10,7 @@ export const initialState = {
   yaml: undefined,
   jsonPipeline: undefined,
   pipeline: undefined,
+  renderYaml: undefined
 }
 
 type State = typeof initialState;
@@ -24,6 +25,7 @@ export const reducer = (state: State, action: Action) => {
       return {
         ...state,
         pipeline: action.payload,
+        renderYaml: action.payload
       };
     case "UPDATE_CONTEXT":
       return {
@@ -43,6 +45,16 @@ export const reducer = (state: State, action: Action) => {
           },
           ...state.context
         }
+      }
+    case "NODE_CLICK":
+      return {
+        ...state,
+        renderYaml: action.payload
+      }
+    case "ESC":
+        return {
+          ...state,
+          renderYaml: state.pipeline
       }
     default:
       return state;
