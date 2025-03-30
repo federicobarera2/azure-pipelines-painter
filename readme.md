@@ -6,7 +6,7 @@ Work in progress for an extension to draw azure devops pipelines in vscode while
 
 ```
 npm i -g yarn
-yarn plugin import workspace-tools
+corepack enable
 
 yarn
 ```
@@ -22,8 +22,14 @@ yarn dev
 cd ./packages/viz2
 yarn dev
 ```
-
 > Debug via `Next.js: debug server-side` launch
+
+## Get Started with the GUI
+
+1. Paste the content of `docs/examples/test.yaml` in the top right editor
+2. Set `__root` parameter to the absolute path of the repo on your project
+3. You can start experiment and provide sub-templates to render as part of parameters. (eg. add `subTemplate: ./docs/examples/test2` and `subTemplate2: test3` )
+4. Click on the nodes to see the rendered jobs/steps
 
 # Run CLI
 
